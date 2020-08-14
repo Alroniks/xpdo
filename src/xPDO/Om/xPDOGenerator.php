@@ -24,7 +24,8 @@ use xPDO\xPDO;
  *
  * @package xPDO\Om
  */
-abstract class xPDOGenerator {
+abstract class xPDOGenerator
+{
     /**
      * @var array A map of classes already updated during this request.
      */
@@ -159,18 +160,14 @@ abstract class xPDOGenerator {
      * capitalizing each token.
      *
      * @access public
-     * @param string $string The table name to format.
+     * @param string $tableName The table name to format.
      * @return string The formatted string.
      */
-    public function getClassName($string) {
-        if (is_string($string) && $strArray= explode('_', $string)) {
-            $return= '';
-            foreach ($strArray as $k => $v) {
-                $return.= strtoupper(substr($v, 0, 1)) . substr($v, 1) . '';
-            }
-            $string= $return;
-        }
-        return trim($string);
+    public function getClassName($tableName)
+    {
+        $delimiter = '_';
+
+        return trim(str_replace($delimiter, '', ucwords($tableName, $delimiter)));
     }
 
     /**

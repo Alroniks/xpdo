@@ -164,12 +164,9 @@ abstract class xPDOGenerator
      * @param string $value The value to encapsulate in the default tag.
      * @return string The parsed XML string
      */
-    public function getDefault($value) {
-        $return= '';
-        if ($value !== null) {
-            $return= ' default="'.$value.'"';
-        }
-        return $return;
+    public function getDefault($value)
+    {
+        return $value === null ? '' : sprintf(' default="%s"', $value);
     }
 
     /**

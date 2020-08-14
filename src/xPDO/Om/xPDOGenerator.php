@@ -19,85 +19,72 @@ use xPDO\xPDO;
  *
  * This service utilizes an xPDOManager instance to generate class stub and
  * meta-data map files from a provided vanilla XML schema of a database
- * structure.  It can also reverse-engineer XML schemas from an existing
+ * structure. It can also reverse-engineer XML schemas from an existing
  * database.
  *
  * @package xPDO\Om
  */
 abstract class xPDOGenerator
 {
-    /**
-     * @var array A map of classes already updated during this request.
-     */
-    public static $updated = array();
+    /** @var array A map of classes already updated during this request. */
+    public static $updated = [];
+
+    /** @var xPDOManager A reference to the xPDOManager using this generator. */
+    public $manager;
 
     /**
-     * @var xPDOManager $manager A reference to the xPDOManager using this
-     * generator.
-     */
-    public $manager= null;
-    /**
-     * @var string $outputDir The absolute path to output the class and map
-     * files to.
+     * @var string $outputDir The absolute path to output the class and map files to.
+     * @deprecated Not used, can be deleted in the next version
      */
     public $outputDir= '';
+
+    /** @var string An absolute path to the schema file. */
+    public $schemaFile = '';
+
+    /** @var string The stored content of the newly-created schema file. */
+    public $schemaContent = '';
+
+    /** @var string The class template string to build the class files from. */
+    public $classTemplate = '';
+
+    /** @var string The class platform template string to build the class platform files from. */
+    public $platformTemplate = '';
+
+    /** @var string The class platform template string to build the meta class map files from. */
+    public $metaTemplate = '';
+
     /**
-     * @var string $schemaFile An absolute path to the schema file.
+     * @var string The map header string to build the map files from.
+     * @deprecated Not used, can be deleted in the next version
      */
-    public $schemaFile= '';
+    public $mapHeader = '';
+
     /**
-     * @var string $schemaContent The stored content of the newly-created schema
-     * file.
+     * @var string The map footer string to build the map files from.
+     * @deprecated Not used, can be deleted in the next version
      */
-    public $schemaContent= '';
-    /**
-     * @var string $classTemplate The class template string to build the class
-     * files from.
-     */
-    public $classTemplate= '';
-    /**
-     * @var string $platformTemplate The class platform template string to build
-     * the class platform files from.
-     */
-    public $platformTemplate= '';
-    /**
-     * @var string $metaTemplate The class platform template string to build
-     * the meta class map files from.
-     */
-    public $metaTemplate= '';
-    /**
-     * @var string $mapHeader The map header string to build the map files from.
-     */
-    public $mapHeader= '';
-    /**
-     * @var string $mapFooter The map footer string to build the map files from.
-     */
-    public $mapFooter= '';
-    /**
-     * @var array $model The stored model array.
-     */
-    public $model= array ();
-    /**
-     * @var array $classes The stored classes array.
-     */
-    public $classes= array ();
-    /**
-     * @var array $map The stored map array.
-     */
-    public $map= array ();
-    /**
-     * @var SimpleXMLElement
-     */
-    public $schema= null;
+    public $mapFooter = '';
+
+    /** @var array The stored model array. */
+    public $model = [];
+
+    /** @var array The stored classes array. */
+    public $classes = [];
+
+    /** @var array The stored map array. */
+    public $map = [];
+
+    /** @var SimpleXMLElement */
+    public $schema;
 
     /**
      * Construct a new xPDOGenerator instance.
      *
-     * @param xPDOManager &$manager A reference to a valid xPDOManager instance.
-     * @return xPDOGenerator
+     * @param xPDOManager $manager A reference to a valid xPDOManager instance.
      */
-    public function __construct(& $manager) {
-        $this->manager= & $manager;
+    public function __construct(&$manager)
+    {
+        $this->manager =& $manager;
     }
 
     /**
@@ -159,7 +146,6 @@ abstract class xPDOGenerator
      * Gets a class name from a table name by splitting the string by _ and
      * capitalizing each token.
      *
-     * @access public
      * @param string $tableName The table name to format.
      * @return string The formatted string.
      */
@@ -175,7 +161,6 @@ abstract class xPDOGenerator
      *
      * Override this in different PDO driver implementations if necessary.
      *
-     * @access public
      * @param string $value The value to encapsulate in the default tag.
      * @return string The parsed XML string
      */
